@@ -2,6 +2,48 @@ require 'os'
 
 util = {}
 
+-- Reload a lua module that has already been required.
+-- (Useful when testing code from the repl, so you don't have to restart the
+-- program.)
+function util.reload(module)
+  package.loaded[module] = nil
+  require(module)
+end
+
+
+-- Set the __index function in the metatable of tbl, so that tbl[i] will
+-- return the value of f(self, i).
+function util.set_index_fn(tbl, fn)
+    local mt = getmetatable(tbl) or {}
+    rawset(mt, '__index', fn)
+    setmetatable(tbl, mt)
+end
+
+
+-- Return all of the keys in a table
+function util.keys(tbl)
+    local keys = {}
+
+    for k,v in pairs(tbl) do
+        table.insert(keys, k)
+    end
+
+    return keys
+end
+
+
+-- Return all of the values in a table
+function util.vals(tbl)
+    local vals = {}
+
+    for k,v in pairs(tbl) do
+        table.insert(vals, v)
+    end
+
+    return vals
+end
+
+
 -- Returns a new shallow copy of a table, with original metatable
 function util.copy(t)
   local t2 = {}
@@ -23,7 +65,7 @@ function util.deep_copy(t)
 
     for k,v in pairs(t) do
         if type(v) == 'table' then
-            v = deep_copy(v)
+            v = util.deep_copy(v)
         end
         res[k] = v
     end
@@ -45,7 +87,7 @@ end
 
 -- Returns a new table concatenating a and b.
 function util.concat(a, b)
-  return merge(copy(a), b)
+  return util.merge(util.copy(a), b)
 end
 
 
@@ -61,15 +103,6 @@ function util.seq_concat(a, b)
     end
 
     return res
-end
-
-
--- Reload a lua module that has already been required.
--- (Useful when testing code from the repl, so you don't have to restart the
--- program.)
-function util.reload(module)
-  package.loaded[module] = nil
-  require(module)
 end
 
 

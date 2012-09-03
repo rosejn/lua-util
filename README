@@ -1,3 +1,9 @@
 # Random utilities
 
 A grab bag of helpful utilities for programming with Lua and Torch.
+
+* reloading namespaces
+* downloading and decompressing files
+* copy, deep copy
+* getting keys or values a table being used as a map
+* optional warnings to detect accidental pollution of global namespace
