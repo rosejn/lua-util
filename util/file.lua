@@ -2,6 +2,7 @@ require 'os'
 require 'fs'
 require 'paths'
 
+
 function is_file(path)
     return paths.filep(path)
 end
@@ -43,7 +44,7 @@ end
 -- Check that a file exists at path, and if not downloads it from url.
 function check_and_download_file(path, url)
   if not paths.filep(path) then
-      do_with_cwd(paths.dirname(path), partial(download_file, url))
+      do_with_cwd(paths.dirname(path), function() download_file(url) end)
   end
 
   return path
