@@ -1,6 +1,13 @@
+require 'torch'
 require 'os'
 
 util = {}
+
+
+--------------------------------
+-- Namespace functions
+--------------------------------
+
 
 -- Reload a lua module that has already been required.
 -- (Useful when testing code from the repl, so you don't have to restart the
@@ -11,6 +18,12 @@ function util.reload(module)
 end
 
 
+
+--------------------------------
+-- Metatable functions
+--------------------------------
+
+
 -- Set the __index function in the metatable of tbl, so that tbl[i] will
 -- return the value of f(self, i).
 function util.set_index_fn(tbl, fn)
@@ -18,6 +31,20 @@ function util.set_index_fn(tbl, fn)
     rawset(mt, '__index', fn)
     setmetatable(tbl, mt)
 end
+
+
+-- Set the __len function in the metatable of tbl, so that #tbl will
+-- return a valid size.
+function util.set_size_fn(tbl, fn)
+    local mt = getmetatable(tbl) or {}
+    rawset(mt, '__len', fn)
+    setmetatable(tbl, mt)
+end
+
+
+--------------------------------
+-- Map functions
+--------------------------------
 
 
 -- Return all of the keys in a table
@@ -41,6 +68,29 @@ function util.vals(tbl)
     end
 
     return vals
+end
+
+
+--------------------------------
+-- Tensor utility functions
+--------------------------------
+
+
+-- Returns true of obj is a torch.Tensor.
+-- TODO: find out if there is a better way to inspect userdata objects...
+function is_tensor(obj)
+	return type(obj) == 'userdata' and obj.dim ~= nil
+end
+
+
+--------------------------------
+-- Table utility functions
+--------------------------------
+
+
+-- Returns true of obj is a table.
+function is_table(obj)
+    return type(obj) == 'table'
 end
 
 
