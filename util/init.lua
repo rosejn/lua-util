@@ -78,7 +78,7 @@ end
 
 -- Returns true of obj is a torch.Tensor.
 -- TODO: find out if there is a better way to inspect userdata objects...
-function is_tensor(obj)
+function util.is_tensor(obj)
 	return type(obj) == 'userdata' and obj.dim ~= nil
 end
 
@@ -89,7 +89,7 @@ end
 
 
 -- Returns true of obj is a table.
-function is_table(obj)
+function util.is_table(obj)
     return type(obj) == 'table'
 end
 
