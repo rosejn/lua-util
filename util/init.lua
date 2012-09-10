@@ -35,6 +35,7 @@ end
 
 -- Set the __len function in the metatable of tbl, so that #tbl will
 -- return a valid size.
+-- NOTE: doesn't work on tables until __len support is added in Lua 5.2.
 function util.set_size_fn(tbl, fn)
     local mt = getmetatable(tbl) or {}
     rawset(mt, '__len', fn)
