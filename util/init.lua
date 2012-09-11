@@ -126,30 +126,30 @@ function util.deep_copy(t)
 end
 
 
--- Copies elements of table b into table a.
+-- Recursively copies elements of table b into table a, overwriting any keys that have
+-- values in both tables to be the values in table b.
 function util.merge(a, b)
-  for k, v in pairs(b) do
-      a[k] = v
-  end
+    for k, v in pairs(b) do
+        if (type(v) == "table") and (type(a[k] or false) == "table") then
+            util.merge(a[k], b[k])
+        else
+            a[k] = v
+        end
+    end
 
-  return a
+    return a
 end
 
 
--- Returns a new table concatenating a and b.
+-- Returns a new table containing the sequential (numeric indices) elements of
+-- tables a and b.
 function util.concat(a, b)
-  return util.merge(util.copy(a), b)
-end
-
-
--- Concatenate two sequential tables (numeric indices), returning a new table.
-function util.seq_concat(a, b)
     local res = {}
-    for _,v in pairs(a) do
+    for _, v in ipairs(a) do
         table.insert(res, v)
     end
 
-    for _,v in pairs(b) do
+    for _, v in ipairs(b) do
         table.insert(res, v)
     end
 
