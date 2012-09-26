@@ -23,6 +23,15 @@ end
 -- Metatable functions
 --------------------------------
 
+-- Returns a table that will return the default value v when a key that has not
+-- been set is indexed.
+function util.table_with_default(v)
+    local tbl = {}
+    local mt = {__index = function () return v end}
+    setmetatable(tbl, mt)
+    return tbl
+end
+
 
 -- Set the __index function in the metatable of tbl, so that tbl[i] will
 -- return the value of f(self, i).
@@ -87,6 +96,12 @@ end
 --------------------------------
 -- Table utility functions
 --------------------------------
+
+-- Returns true if the two tables contain the same values.
+-- NOTE: only does a shallow equality comparison by value.
+function util.table_eq(a, b)
+    return unpack(a) == unpack(b)
+end
 
 
 -- Returns true of obj is a table.
@@ -156,9 +171,16 @@ function util.concat(a, b)
     return res
 end
 
-
 -- Pause the process for n seconds.
 function util.sleep(n)
     os.execute("sleep " .. n)
 end
 
+--[[
+---- For a more accurate sleep we could use select...
+--require "socket"
+--
+--function sleep(sec)
+--        socket.select(nil, nil, sec)
+--end
+--]]
