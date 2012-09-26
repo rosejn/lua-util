@@ -24,7 +24,10 @@ end
 
 function queue.pop_left(q)
   local left = q.left
-  if left > q.right then error("q is empty") end
+  if left > q.right then -- table is empty
+     return nil
+  end
+
   local v = q[left]
   q[left] = nil        -- to allow garbage collection
   q.left = left + 1
@@ -34,7 +37,10 @@ end
 
 function queue.pop_right(q)
   local right = q.right
-  if q.left > right then error("q is empty") end
+  if q.left > right then -- table is empty
+     return nil
+  end
+
   local v = q[right]
   q[right] = nil         -- to allow garbage collection
   q.right = right - 1
