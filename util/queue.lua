@@ -6,6 +6,14 @@ function queue.new()
 end
 
 
+function queue.is_empty(q)
+  if q.left > q.right then
+     return true
+  else
+     return false
+  end
+end
+
 function queue.push_left(q, v)
   local left = q.left - 1
   q.left = left
@@ -24,7 +32,7 @@ end
 
 function queue.pop_left(q)
   local left = q.left
-  if left > q.right then -- table is empty
+  if queue.is_empty(q) then
      return nil
   end
 
@@ -37,7 +45,7 @@ end
 
 function queue.pop_right(q)
   local right = q.right
-  if q.left > right then -- table is empty
+  if queue.is_empty(q) then
      return nil
   end
 
