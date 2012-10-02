@@ -7,13 +7,16 @@
 -- You can skip importing of this module when finished with development.
 -- For example, import this module only when log level is set to debug.
 
-local function _findKeyByVal(obj, val)
-    for field, fieldVal in pairs(obj) do
-        if fieldVal == val then
-            return field
-        end
-    end
+-- Some functions have their first arg named "self",
+-- even when not being proper methods.
+-- We ignore these.
+local IGNORED_FUNC = {
+    Storage__printformat=true,
+    Tensor__printMatrix=true,
+    Tensor__printTensor=true,
+}
 
+local function _getParent(obj)
     local mt = getmetatable(obj)
     if not mt or not mt.__index then
         return nil
@@ -23,6 +26,20 @@ local function _findKeyByVal(obj, val)
         -- We don't know what keys to try with the mt.__index(obj, k) func.
         -- As a fallback, we try to find the method on the metatable.
         parent = mt
+    end
+    return parent
+end
+
+local function _findKeyByVal(obj, val)
+    for field, fieldVal in pairs(obj) do
+        if fieldVal == val then
+            return field
+        end
+    end
+
+    local parent = _getParent(obj)
+    if not parent then
+        return nil
     end
     return _findKeyByVal(parent, val)
 end
@@ -35,9 +52,13 @@ local function onCallCheckSelf()
         return
     end
 
-    if type(obj) == "table" then
+    local lookup = obj
+    if type(obj) == "userdata" then
+        lookup = _getParent(obj)
+    end
+    if type(lookup) == "table" then
         local func = debug.getinfo(2, "f").func
-        local field = _findKeyByVal(obj, func)
+        local field = _findKeyByVal(lookup, func)
         if field then
             -- OK. Found the method on the used object.
             return
@@ -45,6 +66,9 @@ local function onCallCheckSelf()
     end
 
     local info = debug.getinfo(2, "n")
+    if IGNORED_FUNC[info.name] then
+        return
+    end
     local msg = string.format("wrong self for %s()", tostring(info.name))
     error(msg, 3)
 end
