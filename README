@@ -8,3 +8,4 @@ A grab bag of helpful utilities for programming with Lua and Torch.
 * getting keys or values a table being used as a map
 * optional warnings to detect accidental pollution of global namespace
 * safe handling of optional and named function arguments
+* detection of NaNs
