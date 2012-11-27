@@ -93,6 +93,11 @@ function util.is_tensor(obj)
 end
 
 
+-- Returns true of obj is a function.
+function util.is_fn(obj)
+    return type(obj) == 'function'
+end
+
 --------------------------------
 -- Table utility functions
 --------------------------------
@@ -102,7 +107,6 @@ end
 function util.table_eq(a, b)
     return unpack(a) == unpack(b)
 end
-
 
 -- Returns true of obj is a table.
 function util.is_table(obj)
