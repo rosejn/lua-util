@@ -63,30 +63,6 @@ end
 
 
 
---[[! Return value of optional table/named argument with some default
-
-Parameters:
-
-* argv (const table) : table of named parameters
-* argname (string) : name of argument of interest
-* default : default argument
-
---]]
-local function optional_t(argv, argname, default)
-	local x = argv[argname]
-	assert(default ~= nil, 'argv.optional: no default argument specified')
-	if x == nil then
-		return default
-	elseif type(x) ~= type(default) then
-		local msg = string.format('argument \'%s\' has incorrect type (expected %s, found %s)',
-				argname, type(default), type(x))
-		error(msg, 3)
-	end
-	return x
-end
-
-
-
 --[[! Return value of optional scalar argument with some default
 
 The idomatic way of doing this 'x = x or d' does not work if the default is the
@@ -94,6 +70,30 @@ boolean 'true'.
 --]]
 local function optional_s(x, default)
     if x == nil then return default else return x end
+end
+
+
+
+--[[! Return value of optional table/named argument with some default
+
+Parameters:
+
+* argv (const table) : table of named parameters
+* argname (string) : name of argument of interest
+* default : default argument. If not specified, this is nil.
+
+--]]
+local function optional_t(argv, argname, default)
+	local x = argv[argname]
+	default = optional_s(default, nil)
+	if x == nil then
+		return default
+	elseif default and type(x) ~= type(default) then
+		local msg = string.format('argument \'%s\' has incorrect type (expected %s, found %s)',
+				argname, type(default), type(x))
+		error(msg, 3)
+	end
+	return x
 end
 
 
