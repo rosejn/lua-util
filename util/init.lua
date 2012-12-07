@@ -135,9 +135,12 @@ function util.deep_copy(t)
 
     for k,v in pairs(t) do
         if type(v) == 'table' then
-            v = util.deep_copy(v)
+           v = util.deep_copy(v)
+        elseif util.is_tensor(v) then
+           res[k] = v:clone()
+        else
+           res[k] = v
         end
-        res[k] = v
     end
 
     setmetatable(res,mt)

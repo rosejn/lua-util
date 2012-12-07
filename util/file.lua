@@ -7,12 +7,14 @@ function is_file(path)
     return paths.filep(path)
 end
 
+
 function check_file_error(path, msg)
     if not is_file(path) then
         print(msg)
         os.exit()
     end
 end
+
 
 -- Check that a data directory exists, and create it if not.
 function check_and_mkdir(dir)
@@ -21,15 +23,37 @@ function check_and_mkdir(dir)
   end
 end
 
+
 -- Decompress a .tgz or .tar.gz file.
 function decompress_tarball(path)
    os.execute('tar xvf ' .. path)
 end
 
+
+-- Unzip a zip file.
+function unzip(path)
+   os.execute('gunzip ' .. path) 
+end
+
+
+-- Decompress tarballs and zip files, using the suffix to determine which
+-- method to use.
+function decompress_file(path)
+    if string.find(path, ".zip") then
+        unzip(path)
+    elseif string.find(path, ".tar.gz") or string.find(path, ".tgz") then
+        decompress_tarball(path)
+    else
+        print("Don't know how to decompress file: ", path)
+    end
+end
+
+
 -- Download the file at location url.
 function download_file(url)
   os.execute('wget ' .. url)
 end
+
 
 -- Temporarily changes the current working directory to call fn, returning its
 -- result.
@@ -40,6 +64,7 @@ function do_with_cwd(path, fn)
     fs.chdir(cur_dir)
     return res
 end
+
 
 -- Check that a file exists at path, and if not downloads it from url.
 function check_and_download_file(path, url)
