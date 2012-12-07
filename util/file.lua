@@ -2,16 +2,16 @@ require 'os'
 require 'fs'
 require 'paths'
 
-
+-- Boolean predicate to determine if a path points to a valid file or directory.
 function is_file(path)
-    return paths.filep(path)
+    return paths.filep(path) or paths.dirp(path)
 end
 
 
-function check_file_error(path, msg)
+-- Assert that a file exists.
+function assert_file(path, msg)
     if not is_file(path) then
-        print(msg)
-        os.exit()
+        assert(false, msg)
     end
 end
 
