@@ -184,6 +184,24 @@ function util.concat(a, b)
     return res
 end
 
+
+--------------------------------
+-- Useful stuff
+--------------------------------
+
+
+-- Returns true if v is a number.
+function util.is_number(v)
+    return type(v) == 'number'
+end
+
+
+-- Returns true if v is a string.
+function util.is_string(v)
+    return type(v) == 'string'
+end
+
+
 -- Pause the process for n seconds.
 function util.sleep(n)
     os.execute("sleep " .. n)
