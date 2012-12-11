@@ -101,15 +101,22 @@ end
 -- Table utility functions
 --------------------------------
 
--- Returns true if the two tables contain the same values.
--- NOTE: only does a shallow equality comparison by value.
-function util.table_eq(a, b)
-    return unpack(a) == unpack(b)
-end
 
 -- Returns true of obj is a table.
 function util.is_table(obj)
     return type(obj) == 'table'
+end
+
+
+-- Returns true if the (sequential) table is empty.
+function util.is_empty(obj)
+   return #obj == 0
+end
+
+-- Returns true if the two tables contain the same values.
+-- NOTE: only does a shallow equality comparison by value.
+function util.table_eq(a, b)
+    return unpack(a) == unpack(b)
 end
 
 
