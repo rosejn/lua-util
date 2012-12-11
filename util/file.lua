@@ -30,9 +30,15 @@ function decompress_tarball(path)
 end
 
 
--- Unzip a zip file.
+-- unzip a .zip file
 function unzip(path)
-   os.execute('gunzip ' .. path) 
+   os.execute('unzip ' .. path)
+end
+
+
+-- gunzip a .gz file
+function gunzip(path)
+   os.execute('gunzip ' .. path)
 end
 
 
@@ -41,6 +47,8 @@ end
 function decompress_file(path)
     if string.find(path, ".zip") then
         unzip(path)
+    elseif string.find(path, ".gz") or string.find(path, ".gzip") then
+        gunzip(path)
     elseif string.find(path, ".tar.gz") or string.find(path, ".tgz") then
         decompress_tarball(path)
     else

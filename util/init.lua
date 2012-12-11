@@ -18,7 +18,6 @@ function util.reload(module)
 end
 
 
-
 --------------------------------
 -- Metatable functions
 --------------------------------
@@ -183,11 +182,61 @@ function util.sleep(n)
     os.execute("sleep " .. n)
 end
 
---[[
----- For a more accurate sleep we could use select...
---require "socket"
+
+--------------------------------
+-- Argument handling
+--------------------------------
+
+-- Default argument parsing that takes the arg table, mandatory arg list with
+-- optional type per argument, and optional arg list with default values per arg.
+-- e.g.
 --
---function sleep(sec)
---        socket.select(nil, nil, sec)
---end
---]]
+--   -- where a and b are mandatory args
+--   args = util.args(..., {'a', 'b'}) 
+--
+--   -- or with a,b,c mandatory and foo optional with a default
+--   args = util.args(..., {'a', 'b', 'c' = 'string'}, {'foo' = 2})
+--
+function util.args(argv, required, optional)
+   argv = util.merge(optional, argv)
+
+   for k, v in pairs(required) do
+      local name, arg_type
+
+      if type(k) == 'number' then
+         name = v
+         arg_type = nil
+      else
+         name = k
+         arg_type = v
+      end
+
+      --print('check arg: ', name, ' of type: ', arg_type, " ==> ", argv[name])
+      if argv[name] == nil then
+         error(string.format('Missing argument: \'%s\'', name), 3)
+      end
+
+      if arg_type and type(argv[name]) ~= arg_type then
+         error(string.format('Incorrect argument type for arg: \'%s\' that should be a %s',
+                             name, arg_type),
+               3)
+      end
+
+      if #argv ~= (#util.keys(required) + #util.keys(optional)) then
+         local all_keys = util.concat(util.keys(required), util.keys(optional))
+         local keymap = {}
+         for _, v in ipairs(all_keys) do
+            keymap[v] = true
+         end
+
+         for k,v in pairs(argv) do
+            if keymap[k] == nil then
+               error(string.format('Unknown argument found in arglist: \'%s\'', k), 3)
+            end
+         end
+      end
+   end
+
+   return argv
+end
+
