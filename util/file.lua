@@ -26,7 +26,7 @@ end
 
 -- Decompress a .tgz or .tar.gz file.
 function decompress_tarball(path)
-   os.execute('tar xvf ' .. path)
+   os.execute('tar -xvzf ' .. path)
 end
 
 
@@ -47,10 +47,10 @@ end
 function decompress_file(path)
     if string.find(path, ".zip") then
         unzip(path)
-    elseif string.find(path, ".gz") or string.find(path, ".gzip") then
-        gunzip(path)
     elseif string.find(path, ".tar.gz") or string.find(path, ".tgz") then
         decompress_tarball(path)
+    elseif string.find(path, ".gz") or string.find(path, ".gzip") then
+        gunzip(path)
     else
         print("Don't know how to decompress file: ", path)
     end
