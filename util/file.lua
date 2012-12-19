@@ -26,7 +26,7 @@ end
 
 -- Decompress a .tgz or .tar.gz file.
 function decompress_tarball(path)
-   os.execute('tar xvf ' .. path)
+   os.execute('tar xvzf ' .. path)
 end
 
 
