@@ -1,10 +1,7 @@
 require 'torch'
 require 'util/CSVFile'
 
-tester = torch.Tester()
-mytest = {}
-
-function mytest.testCreate()
+function tests.testCreate()
    local csv = CSVFile('test.csv')
    csv:writeHeader({'a','b','c'})
    csv:writeLine{a=1,b=1,c=3.4}
@@ -19,8 +16,3 @@ function mytest.testCreate()
    os.execute('rm test.csv')
 end
 
-function mytest.testWriteValues()
-end
-
-tester:add(mytest)
-tester:run()
