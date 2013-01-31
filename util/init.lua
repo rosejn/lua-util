@@ -97,6 +97,35 @@ function util.is_fn(obj)
     return type(obj) == 'function'
 end
 
+
+-- Report memory usage of nested tables (tensors only)
+function util.report_memory_usage(obj)
+
+	print(string.format('%-56s%12s%12s', 'object', 'tensor', 'storage'))
+
+	local function go(obj, name)
+		if type(obj) == 'table' then
+			for k,v in pairs(obj) do
+				go(v, string.format('%s/%s', name, k))
+			end
+		elseif util.is_tensor(obj) then
+			local szTensor
+			local szStorage
+			local storage = obj:storage()
+			if storage then
+				print(string.format('%-56s%12u%12u', name, obj:nElement(), obj:storage():size()))
+			else
+				print(string.format('%-56s%12u%12u', name, obj:nElement(), 0))
+			end
+		else
+			return
+		end
+	end
+
+	go(obj, '')
+end
+
+
 --------------------------------
 -- Table utility functions
 --------------------------------
