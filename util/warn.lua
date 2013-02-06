@@ -13,8 +13,8 @@ local function guardGlobals()
         __newindex = function (table, key, value)
             if not IGNORED_WRITES[key] then
                 local info = debug.getinfo(2, "Sl")
-                print(string.format(
-                    "warn %s:%s: write to undeclared variable: %s",
+                io.stderr:write(string.format(
+                    "warn %s:%s: write to undeclared variable: %s\n",
                     tostring(info.short_src), tostring(info.currentline), key))
             end
             rawset(table, key, value)
