@@ -59,7 +59,12 @@ end
 
 -- Download the file at location url.
 function download_file(url)
-  os.execute('wget ' .. url)
+    local protocol, scpurl, filename = url:match('(.-)://(.*)/(.-)$')
+    if protocol == 'scp' then
+        os.execute(string.format('%s %s %s', 'scp', scpurl .. '/' .. filename, filename))
+    else
+        os.execute('wget ' .. url)
+    end
 end
 
 
