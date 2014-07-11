@@ -85,10 +85,9 @@ Parameters:
 --]]
 local function optional_t(argv, argname, default)
 	local x = argv[argname]
-	default = optional_s(default, nil)
 	if x == nil then
 		return default
-	elseif default and type(x) ~= type(default) then
+	elseif default ~= nil and type(x) ~= type(default) then
 		local msg = string.format('argument \'%s\' has incorrect type (expected %s, found %s)',
 				argname, type(default), type(x))
 		error(msg, 3)
